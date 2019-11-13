@@ -1,6 +1,7 @@
 # Oracle Functions with GraalVM on OCI Hands-On (Oracle Modern Cloud Day 2019의 Tech Hands-on Track)
 
 ![](images/header.png)
+<-- MCD 관련 이미지로 교체 >
 
 ## Introduction
 본 핸즈온 문서는 Oracle Serverless 서비스인 Oracle Function Cloud Service 사용 방법과 간단한 Java Function, GraalVM을 사용한 Native Java Function을 배포하는 과정을 다루고 있습니다. 본 과정을 통해서 기본적인 Oracle Function Cloud Service 사용법과 Native Java Function에 대한 이해 및 배포, 실행에 대한 경험을 해볼 수 있습니다.
@@ -350,43 +351,6 @@ sys	    0m0.012s
 
 ### 요약
 ....
-
-
-
-
-
-
-
-
-
-## **STEP 6**: Function Application 생성
-
-## **STEP 7**: 일반 Java Function 생성 및 배포
-```
-$ fn init --runtime java helloworld-func
-```
-
-## **STEP 4**: Hello World Application 생성
-
-
-
-## **STEP 6**: Native-Image Java FUnction 생성 (GraalVM)
-
-## **STEP 7**: Function 호출 테스트
-
-
-
-
-
-
-### Compartment 만들기
-<font color='red'>이미 만들어진 Compartment가 있을 경우 이 단계는 건너뜁니다.</font>
-> ***Compartment***   
-> 모든 OCI 리소스는 특정 Compartment에 속하게 되며 Compartment 단위로 사용자들의 접근 정책을 관리할 수 있습니다. 처음에는 Root Compartment가 만들어지며, Root Compartment 하위에 추가 Compartment를 생성할 수 있습니다. OCI 클라우드 리소스를 쉽게 관리하기 위한 일종의 폴더 개념이라고 생각하면 됩니다. 부서나 프로젝트등을 고려해서 Compartment를 구성하여 해당 Compartment별로 세부적인 권한을 부여할 수 있습니다.
-
-먼저 OCI Console에 로그인합니다.
-
-1. https://console.us-ashburn-1.oraclecloud.com 접속 후 Tenant 입력 > 
 
 ## 참고
 https://medium.com/criciumadev/serverless-native-java-functions-using-graalvm-and-fn-project-c9b10a4a4859
