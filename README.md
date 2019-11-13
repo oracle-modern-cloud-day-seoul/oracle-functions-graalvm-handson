@@ -20,14 +20,10 @@
 * SSH Terminal (windows Putty, macOS Terminal 등)
 
 ## Client 접속 환경
-ssh -i id_rsa opc@132.145.83.122
+ssh -i id_rsa opc@140.238.18.26
 실습 환경 접속 정보 받기
 
-## Serverless
-### Cold start and Warm start
-
 ## Functions and GraalVM
-### Oracle Functions Cloud Service
 
 
 ## Hands-On Steps
@@ -203,6 +199,69 @@ Login Succeeded
     ```
 
 ## **STEP 5**: VCN 생성
+Function Application에서 사용할 Network 설정을 하는 과정입니다.
+
+1. VCN(Virtual Cloud Networks) 구성을 위해 메뉴 > Network > Virtual Cloud Networks를 클릭합니다.
+![](images/oci_menu_vcn.png)
+
+2. Compartment를 선택한 후 Create Virtual Cloud Network 클릭
+![](images/oci_create_vcn_btn.png)
+
+3. 다음과 같이 입력후 Create Virtual Cloud Network 클릭
+- Name: fn_vcn
+- CREATE VIRTUAL CLOUD NETWORK PLUS RELATED RESOURCES: Check
+![](images/oci_create_vcn_1.png)
+
+4. VCN 생성 확인
+![](images/oci_vcn_create_confirm.png)
+
+## **STEP 6**: Function Application 생성
+Function Application은 Function의 논리적인 그룹으로 Function Application에는 다수의 Function이 포함될 수 있으며, VCN과 Configuration을 공유합니다.
+
+1. Function Application 생성을 위해 OCI Console 로그인 후 메뉴 > Developer Services > Functions를 선택합니다.
+![](images/oci_menu_functions.png)
+
+2. Create Application을 클릭한 후 다음과 같이 입력/선택한 후 Create 버튼을 클릭합니다.
+- NAME: helloworld-app
+- VCN in {Compartment}: fn_vcn
+- SUBNETS in {Compartment}: 생성된 Subnet 선택
+![](images/oci_create_function_app.png)
+
+2. 생성된 Application을 선택합니다. 등록된 Function 목록, Metrics, Network, Configuration을 확인할 수 있습니다.
+![](images/oci_function_app_confirm.png)
+
+## **STEP 7**: Java Function 생성
+
+1. 일반적인 Java Function을 생성합니다.
+```
+$ fn init --runtime java helloworld-func
+```
+
+2. 생성된 Function은 다음과 같은 구조를 가지고 있습니다.
+```
++ helloworld-func
+    - func.yaml
+    - pom.xml
+    + src
+        + main/java/com/example/fn/
+            - HelloFunction.java
+        + test/java/com/example/fn/
+            - HelloFunctionTest.java
+```
+
+## **STEP 8**: Java Function 배포
+생성한 Function을 배포해보겠습니다. 다음과 같이 실행합니다. 
+> 배포 시 다음과 같은 오류가 발생할 경우는 Docker login이 되어 있지 않은 경우입니다. 이 경우 다시 docker login을 한 후 재시도합니다.  
+> 
+> denied: Anonymous users are only allowed read access on public repos
+> Fn: error running docker push, are you logged into docker?: exit status 1
+
+```
+$ cd helloworld-func
+
+$ fn deploy --app helloworld-app
+```
+
 
 ## **STEP 6**: Function Application 생성
 
