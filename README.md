@@ -27,18 +27,18 @@ Oracle Functions (with Fn Project)와 고성능, Polygrot VM인 GraalVM을 사�
 
 ## Hands-On Steps (30분)
 전체 과정
-**STEP 1**: GraalVM CE 설치
-**STEP 2**: OCIR (Oracle Container Infrastructure Registry) Login 정보 확인
-**STEP 3**: Docker Login
-**STEP 4**: Fn Project CLI 설정
-**STEP 5**: VCN 생성
-**STEP 6**: Function Application 생성
-**STEP 7**: Java Function 생성
-**STEP 8**: Java Function 배포 및 업데이트
-**STEP 9**: Functin 호출 테스트
-**STEP 10**: GraalVM을 사용한 Native Java Function 생성
-**STEP 11**: Native Java Function 배포 및 업데이트
-**STEP 12**: Native Java Functin 호출 테스트
+**STEP 1**: GraalVM CE 설치  
+**STEP 2**: OCIR (Oracle Container Infrastructure Registry) Login 정보 확인  
+**STEP 3**: Docker Login  
+**STEP 4**: Fn Project CLI 설정  
+**STEP 5**: VCN 생성  
+**STEP 6**: Function Application 생성  
+**STEP 7**: Java Function 생성  
+**STEP 8**: Java Function 배포 및 업데이트  
+**STEP 9**: Functin 호출 테스트  
+**STEP 10**: GraalVM을 사용한 Native Java Function 생성  
+**STEP 11**: Native Java Function 배포 및 업데이트  
+**STEP 12**: Native Java Functin 호출 테스트  
 
 
 ## Hands-On
