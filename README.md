@@ -3,6 +3,15 @@
 ![](images/header.png)
 <-- MCD 관련 이미지로 교체 >
 
+Function이 우선, GraalVM을 뒤로  
+Function이 Polygrot이라는... Python이나 Go로 하나 해보는것도 좋을듯...
+소개에서 Function에 대한 간략한 소개
+....
+
+....
+
+
+
 ## Introduction
 본 핸즈온 문서는 Oracle Serverless 서비스인 Oracle Function Cloud Service 사용 방법과 간단한 Java Function, GraalVM을 사용한 Native Java Function을 배포하는 과정을 다루고 있습니다. 본 과정을 통해서 기본적인 Oracle Function Cloud Service 사용법과 Native Java Function에 대한 이해 및 배포, 실행에 대한 경험을 해볼 수 있습니다.
 
