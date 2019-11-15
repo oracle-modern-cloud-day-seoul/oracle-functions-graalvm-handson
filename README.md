@@ -196,7 +196,7 @@ Function API Url은 각 Region별로 URL을 제공합니다. 배포하고자 하
 6. Compartment OCID를 업데이트 합니다. OCI Console에서 MCD Compartment의 OCID를 확인합니다.
     > 메뉴 > Identity > Compartments > MCD 선택
 
-  ![](images/animated_gif/oci_compartment_ocid.gif)
+    ![](images/animated_gif/oci_compartment_ocid.gif)
 
     기본 사용법은 다음과 같습니다.
     ```shell
