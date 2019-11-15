@@ -375,9 +375,9 @@ $ time fn invoke helloworld-app helloworld-func-abcde1
 
 Hello, world!
 
-real	0m6.357s
-user	0m0.084s
-sys	    m0.012s
+real    0m6.357s
+user    0m0.084s
+sys m0.012s
 ```
 
 ### **STEP 9**: GraalVM을 사용한 Native Java Function 생성
@@ -486,7 +486,7 @@ Hello, world!
 
 real	0m3.024s
 user	0m0.081s
-sys	    0m0.012s
+sys 0m0.012s
 ```
 
 
