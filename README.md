@@ -32,7 +32,7 @@ Presentation은 Gitpitch를 사용할 예정임.
 Oracle Functions (with Fn Project)와 고성능, Polygrot VM인 GraalVM을 사용한 Native Java Image에 대한 간략한 소개 및 이점등에 대한 내용을 설명
 
 ## Hands-On Steps (30분)
-전체 과정
+전체 과정  
 **STEP 1**: GraalVM CE 설치  
 **STEP 2**: OCIR (Oracle Container Infrastructure Registry) Login 정보 확인  
 **STEP 3**: Docker Login  
