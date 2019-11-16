@@ -1,5 +1,7 @@
 # Oracle Functions with GraalVM on OCI Hands-On (Oracle Modern Cloud Day 2019의 Tech Hands-on Track)
 
+# 토큰 이슈가 있음
+
 Oracle Modern Cloud Day 2019의 Developer Hands-on Track
 
 ![](images/header_redwood_2.png)
@@ -17,12 +19,23 @@ Oracle Modern Cloud Day 2019의 Developer Hands-on Track
 * OCI (Oracle Cloud Infrastructure) 계정
 * SSH Terminal (windows Putty, macOS Terminal 등)
 
-## 실습을 위한 클라이언트 환경
-다음 주소를 클릭합니다. 본인의 이메일 주소를 입력하면 실습을 위한 클라이언트 환경을 할당받을 수 있습니다.
---- 여기서 이메일 입력, 제출 클릭하면 Private/Public Key (Putty, OpenSSH), IP, 접속 계정을 전달 받는다.
+## 실습을 위한 클라이언트 환경과 oci_info
+본 실습을 위해서 각 개인별로 한 개의 Oracle Cloud Trial과 실습을 진행하기 위한 클라이언트 환경을 제공합니다.  
+클라이언트 환경 접속에 대한 정보는 별도로 제공합니다.  
+클라이언트 환경에 접속을 하면 홈 디렉토리에서 볼 수 있는 oci_info라는 파일이 있으며, 실습을 진행할 때 필요한 정보가 있습니다.
+해당 파일의 내용은 Oracle Cloud Console에서 확인할 수 있는 정보이지만, 실습 시간 관계상 미리 정보를 수집해 준비해 놓았습니다.
+파일의 내용은 다음과 같이 확인할 수 있습니다.
 
+아래는 예시 입니다.
 ```
-ssh -i id_rsa opc@140.238.18.26
+$ cat ~/oci_info
+
+tenancy_namespace: cnok2pgwbqnj
+tenancy_ocid: ocid1.tenancy.oc1..aaaaaaaa77jrcspi4lo2ruqdsjyp3nsimvbgi237geemqkfpr72fqdvl7pea
+docker_registry: icn.ocir.io
+docker_userid: cnok2pgwbqnj/twkim9978@gmail.com
+auth_token: P]xPvY0t2PqRB6s(dM3J
+compartment_ocid[MCD]: ocid1.compartment.oc1..aaaaaaaac4jbpfwkeqwwvyhkimynnf7kxyblfzgkt7jdj3qxsjbgvcy35jca
 ```
 
 ## Oracle Functions Cloud Service 및 GraalVM Native Image 소개 (장표 설명, 10분 ~ 15분)
@@ -31,38 +44,39 @@ Presentation은 Gitpitch를 사용할 예정임.
 
 Oracle Functions (with Fn Project)와 고성능, Polygrot VM인 GraalVM을 사용한 Native Java Image에 대한 간략한 소개 및 이점등에 대한 내용을 설명
 
-## Hands-On Steps (30분)
-전체 과정  
-**STEP 1**: GraalVM CE 설치  
-**STEP 2**: OCIR (Oracle Container Infrastructure Registry) Login 정보 확인  
-**STEP 3**: Docker Login  
-**STEP 4**: Fn Project CLI 설정  
-**STEP 5**: VCN 생성  
-**STEP 6**: Function Application 생성  
-**STEP 7**: Java Function 생성  
-**STEP 8**: Java Function 배포 및 업데이트  
-**STEP 9**: Functin 호출 테스트  
-**STEP 10**: GraalVM을 사용한 Native Java Function 생성  
-**STEP 11**: Native Java Function 배포 및 업데이트  
-**STEP 12**: Native Java Functin 호출 테스트  
+## Hands-On (30분)
+총 11개의 단계로 구성됩니다.  
+**STEP 1**: OCIR (Oracle Container Infrastructure Registry) Login 정보 확인  
+**STEP 2**: Docker Login  
+**STEP 3**: Fn Project CLI 설정  
+**STEP 4**: VCN 생성  
+**STEP 5**: Function Application 생성  
+**STEP 6**: Java Function 생성  
+**STEP 7**: Java Function 배포 및 업데이트  
+**STEP 8**: Functin 호출 테스트  
+**STEP 9**: GraalVM을 사용한 Native Java Function 생성  
+**STEP 10**: Native Java Function 배포 및 업데이트  
+**STEP 11**: Native Java Functin 호출 테스트  
 
 ## Hands-On
 ***
 
 ### **STEP 1**: OCIR (Oracle Container Infrastructure Registry) Login을 위한 기본 정보
-Oracle Function을 사용하기 위해서는 기본적으로 Docker를 활용하여 이미지를 생성하고, 이를 Docker Registry에 푸시 합니다. Docker Registry는 Oracle Cloud Infrastructure (이하 OCI)에서 제공하는 Oracle Container Infrastructure Registry (이하 OCIR)를 사용하게 됩니다. OCIR 접속을 위한 정보는 Registry URL, Username, Password로 각각의 정보를 얻는 과정은 다음과 같습니다.
+Oracle Function을 사용하기 위해서는 기본적으로 Docker를 활용하여 이미지를 생성하고, 이를 Docker Registry에 푸시 합니다. Docker Registry는 Oracle Cloud Infrastructure (이하 OCI)에서 제공하는 Oracle Container Infrastructure Registry (이하 OCIR)를 사용하게 됩니다. OCIR 접속을 위해 필요한 정보는 Registry URL, Docker Username, Password(Token) 이며, 각 정보는 클라이언트 환경의 홈 디렉토리에 있는 oci_info 파일에서 제공합니다.
+
+![](images/oci_docker_login_info.png)
+
+<details>
+<summary>
+<i>참고) 직접 Registry URL, Username, Password를 확인하는 방법</i>
+</summary>
 
 1. Registry URL
 - 기본 주소 포멧
-    > **{region_code}.ocir.io**  
+    > **{region_code}.ocir.io** (예시: icn.ocir.io)  
     > regison_code는 https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm 에서 확인가능
 
-- 본 실습에서는 애시번 (iad)리전의 Registry를 사용
-    > iad.ocir.io  
-    > 
-    > <font color='red'>(Registry URL은 Function 설정시에도 필요하므로 메모합니다!)</font>
-
-2. Username
+2. Docker Username
 - 기본 OCIR 사용자 아이디 포멧
     > **{tenancy_namespace}/{oci계정}**
 - tenancy_namespace 확인
@@ -75,27 +89,31 @@ Oracle Function을 사용하기 위해서는 기본적으로 Docker를 활용하
 
     ![](images/animated_gif/oci_username.gif)
 
-- OCIR Username 예시: idsufmye3lml/oracleidentitycloudservice/donghu.kim@oracle.com  
-<font color='red'>(Tenancy Namespace는 Function 설정시에도 필요하므로 메모합니다!)</font>
+- OCIR Docker Username 예시: idsufmye3lml/oracleidentitycloudservice/donghu.kim@oracle.com  
 
-3. Password
+3. Password (Token)
 - OCIR 로그인을 위한 임시 토큰 발행
     > OCI Console 로그인 후 우측 상단의 사용자 아이콘 클릭 > Profile 바로 밑의 사용자 아이디를 클릭 > 좌측 Auth Tokens 클릭 > Generate Token 클릭 > Description에 **ocir-token** 입력 후 Generate Token 클릭 > 생성된 토큰을 복사   
-    <font color='red'>(토큰은 Function 설정시에도 필요하므로 메모합니다!)</font>
 
     ![](images/animated_gif/oci_auth_token.gif)
+
+</details>
 
 ### **STEP 2**: Docker Login
 docker login 명령어를 사용하여 OCIR에 로그인하는 과정입니다.
 ```
-$ docker login {Registry URL} --username {Username} --password '{Password}'
+$ docker login {Registry URL} 
+Username: {Docker Username} 
+Password: {Password} 
+
 ```
 다음은 접속 예시입니다.
 ```shell
-$ docker login icn.ocir.io --username idsufmye3lml/oracleidentitycloudservice/donghu.kim@oracle.com --password 'hT{+t3KnuF.5x42a(>l)'
+$ docker login icn.ocir.io
+Username: cnok2pgwbqnj/twkim9978@gmail.com
+Password: P]xPvY0t2PqRB6s(dM3J
 
-WARNING! Using --password via the CLI is insecure. Use --password-stdin.
-WARNING! Your password will be stored unencrypted in /home/admin/.docker/config.json.
+WARNING! Your password will be stored unencrypted in /home/user101/.docker/config.json.
 Configure a credential helper to remove this warning. See
 https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
@@ -118,7 +136,7 @@ Login Succeeded
     $ fn create context <my-context> --provider oracle
     ```
 
-    <my-context>는 관리할 Context의 이름으로 실습에서는 **helloworld**로 지정하여 다음과 같이 생성합니다.
+    **my-context** 는 관리할 Context의 이름으로 실습에서는 **helloworld**로 지정하여 다음과 같이 생성합니다.
     ```shell
     $ fn create context helloworld --provider oracle
 
@@ -128,6 +146,8 @@ Login Succeeded
 3. Fn Project CLI에서 위에서 생성한 Context를 사용하도록 설정합니다.
     ```shell
     $ fn use context helloworld
+
+    Now using context: helloworld
     ```
 
 4. 생성한 Context를 업데이트 합니다. 필요한 정보는 OCI CLI의 Profile, function 서버의 API URL, Compartment OCID, Container Registry로 먼저 OCI CLI의 Profile을 업데이트합니다.
@@ -152,6 +172,8 @@ Login Succeeded
     실제 profile[DEFAULT]을 적용하여 업데이트합니다.
     ```
     $ fn update context oracle.profile DEFAULT
+
+    Current context updated oracle.profile with DEFAULT
     ```
 
 <details>
@@ -166,9 +188,11 @@ oci-cli 설치 및 구성은 다음 페이지를 참고합니다.
 
 </details>
 
-5. OCI에서 제공하는 Function API URL을 업데이트 합니다.
+5. OCI에서 제공하는 Function API URL을 업데이트 합니다. 여기서는 서울 리전의 Function API를 사용합니다.
     ```shell
-    $ fn update context api-url https://functions.us-ashburn-1.oraclecloud.com
+    $ fn update context api-url https://functions.ap-seoul-1.oci.oraclecloud.com
+
+    Current context updated api-url with https://functions.ap-seoul-1.oci.oraclecloud.com
     ```
 
 <details>
@@ -192,62 +216,60 @@ Function API Url은 각 Region별로 URL을 제공합니다. 배포하고자 하
 
 </details>
 
+6. Compartment OCID를 업데이트 합니다. 기본적으로 OCI Console에서 MCD Compartment의 OCID를 확인할 수 있으나, 시간 관계상 클라이언트 환경에 준비된 oci_info 파일의 내용을 참조합니다.
 
-6. Compartment OCID를 업데이트 합니다. OCI Console에서 MCD Compartment의 OCID를 확인합니다.
-    > 메뉴 > Identity > Compartments > MCD 선택
-
-    ![](images/animated_gif/oci_compartment_ocid.gif)
+    ![](images/oci_compartment_ocid_info.png)
 
     기본 사용법은 다음과 같습니다.
-    ```shell
+
+    ```
     $ fn update context oracle.compartment-id <compartment-ocid>
     ```
 
     실제 Compartment OCID를 적용한 예시입니다.
-    ```shell
+
+    ```
     $ fn update context oracle.compartment-id ocid1.compartment.oc1..aaaaaaaanojzru4tvrayjwezor2dlbo2um25xodb5bz2zp4kyx3nj7xgax6a
     ```
 
+<details>
+<summary>
+<i>참고) Compartment OCID 확인하는 방법</i>
+</summary>
+
+> 메뉴 > Identity > Compartments > Compartment 선택 (e.g. MCD)
+
+![](images/animated_gif/oci_compartment_ocid.gif)
+
+</details>
+
+    
+
 7. Oracle Container Registry URL과 Repository 설정입니다.
-    기본 사용법은 다음과 같습니다.
+    기본 사용법은 다음과 같습니다. tenancy_namespace와 Registry URL은 oci_info 파일에서 확인합니다.
+
     ```shell
     $ fn update context registry <region-code>.ocir.io/<tenancy-namespace>/<repo-name>
     ```
 
-    실제 region-code, tenancy-namespace, repo-name을 적용한 예시입니다. repo-name은 helloworld로 통일합니다.
+    실제 region-code, tenancy-namespace, repo-name을 적용한 예시입니다. repo-name은 **helloworld**로 통일합니다.
+    
     ```shell
-    $ fn update context registry iad.ocir.io/idsufmye3lml/helloworld
+    $ fn update context registry icn.ocir.io/idsufmye3lml/helloworld
     ```
 
 8. 설정된 context의 내용을 확인합니다.
     ```shell
     $ cat $HOME/.fn/contexts/helloworld.yaml
 
-    api-url: https://functions.us-ashburn-1.oraclecloud.com
+    api-url: https://functions.ap-seoul-1.oraclecloud.com
     oracle.compartment-id: ocid1.compartment.oc1..aaaaaaaanojzru4tvrayjwezor2dlbo2um25xodb5bz2zp4kyx3nj7xgax6a
     oracle.profile: DEFAULT
     provider: oracle
-    registry: iad.ocir.io/idsufmye3lml/helloworld
+    registry: icn.ocir.io/idsufmye3lml/helloworld
     ```
 
-### **STEP 4**: VCN 생성
-Function Application에서 사용할 Network 설정을 하는 과정입니다.
-
-1. VCN 메뉴
-    > 메뉴 > Network > Virtual Cloud Networks를 클릭
-
-    ![](images/animated_gif/oci_menu_vcn.gif)
-
-2. Virtual Cloud Network 생성
-    > MCD Compartment를 선택 > Create Virtual Cloud Network 클릭
-    - Name: fn_vcn
-    - CREATE VIRTUAL CLOUD NETWORK PLUS RELATED RESOURCES: Check
-    ![](images/animated_gif/oci_create_vcn.gif)
-
-3. VCN 생성 확인
-![](images/oci_vcn_create_confirm.png)
-
-### **STEP 5**: Function Application 생성
+### **STEP 4**: Function Application 생성
 Function Application은 Function의 논리적인 그룹으로 Function Application에는 다수의 Function이 포함될 수 있으며, VCN과 Configuration을 공유합니다.
 
 1. Function Application 생성 메뉴
@@ -258,12 +280,12 @@ Function Application은 Function의 논리적인 그룹으로 Function Applicati
 2. Function Application 생성
     > Create Application을 클릭 >  아래와 같이 입력 > **Create** 버튼 클릭
     - NAME: helloworld-app
-    - VCN in {Compartment}: fn_vcn
+    - VCN in {Compartment}: fn_vcn (생성되어 있는 vcn을 사용합니다.)
     - SUBNETS in {Compartment}: 생성된 Subnet 선택
 
     ![](images/animated_gif/oci_create_function_app.gif)
 
-### **STEP 6**: Java Function 생성
+### **STEP 5**: Java Function 생성
 
 <details>
 <summary>
@@ -303,7 +325,7 @@ $ fn init --runtime java helloworld-func-{unique-value}
 2. 생성된 Function은 다음과 같은 구조를 가지고 있습니다.
 ```
 .
-├── helloworld-func-abcde1
+├── helloworld-func-{unique-value}
 │   ├── func.yaml
 │   ├── pom.xml
 │   └── src
@@ -348,7 +370,7 @@ public class HelloFunction {
 }
 ```
 
-### **STEP 7**: Java Function 배포 및 업데이트
+### **STEP 6**: Java Function 배포 및 업데이트
 생성한 Function을 배포해보겠습니다. 다음과 같이 실행합니다. 
 > 배포 시 다음과 같은 오류가 발생할 경우는 Docker login이 되어 있지 않은 경우입니다. 이 경우 다시 docker login을 한 후 재시도합니다.  
 > 
@@ -357,83 +379,33 @@ public class HelloFunction {
 
 Function 배포
 ```shell
-$ cd helloworld-func-abcde1
+$ cd helloworld-func-{unique-value}
 
 $ fn deploy --app helloworld-app
 ```
 
 Function 업데이트 (memory: 256M(default: 128M), timeout: 60s(default: 30s))
 ```shell
-$ fn update function helloworld-app helloworld-func-abcde1 --memory 256 --timeout 60
+$ fn update function helloworld-app helloworld-func-{unique-value} --memory 256 --timeout 60
 ```
 
 ### **STEP 8**: Function 호출 테스트
 time을 사용하여 Function 호출 후 실행 완료하기까지 소요되는 시간을 체크합니다. 일반 Java VM을 사용한 경우 Cold Start 타임이 대략 6초 소요된 것을 확인할 수 있습니다.
 
 ```shell
-$ time fn invoke helloworld-app helloworld-func-abcde1
+$ time fn invoke helloworld-app helloworld-func-{unique-value}
 
 Hello, world!
 
-real    0m6.357s
-user    0m0.084s
-sys m0.012s
+real	0m21.716s
+user	0m0.078s
+sys	0m0.021s
 ```
 
 ### **STEP 9**: GraalVM을 사용한 Native Java Function 생성
 이번에는 GraalVM을 사용하여 Java Function을 Native Image로 생성해보도록 하겠습니다.
 
-1. GraalVM 설치 확인을 합니다. (실습 시간 관계상 미리 설치된 GraalVM을 사용합니다.)
-
-```shell
-$ java -version
-openjdk version "1.8.0_232"
-OpenJDK Runtime Environment (build 1.8.0_232-20191008104205.buildslave.jdk8u-src-tar--b07)
-OpenJDK 64-Bit GraalVM CE 19.2.1 (build 25.232-b07-jvmci-19.2-b03, mixed mode)
-```
-
-<details>
-<summary>
-<i>참고) GraalVM 설치</i>
-</summary>
-
-GraalVM CE를 설치하는 방법은 여러가지가 있습니다. GraalVM은 [GraalVM 다운로드 페이지](https://www.graalvm.org/downloads/)에서 패키징된 파일을 다운로드 받을 수 있습니다. GraalVM EE의 경우는 [Oracle에서 제공하는 페이지](https://www.oracle.com/downloads/graalvm-downloads.html)에서 다운로드 받을 수 있습니다.
-macOS의 경우는 brew를 사용해서 설치할 수도 있습니다.
-
-macOS Homebrew를 통한 설치
-```
-$ brew cask install graalvm/tap/graalvm-ce
-```
-
-직접 다운로드 받아서 설치도 가능하지만, SDKMAN이라고 하는 SDK 관리툴을 사용하여 GraalVM을 설치 및 관리할 수 있습니다.
-
-1. SDKMAN 설치
-```shell
-$ curl -s "https://get.sdkman.io" | bash
-$ source "$HOME/.sdkman/bin/sdkman-init.sh"
-```
-
-2. SDKMAN 에서 지원하는 Java 목록 확인
-```shell
-$ sdk list java
-```
-
-3. GraalVM 설치
-```shell
-$ sdk install java 19.2.1-grl
-```
-
-4. GraalVM 설치 확인
-```shell
-$ java -version
-openjdk version "1.8.0_232"
-OpenJDK Runtime Environment (build 1.8.0_232-20191008104205.buildslave.jdk8u-src-tar--b07)
-OpenJDK 64-Bit GraalVM CE 19.2.1 (build 25.232-b07-jvmci-19.2-b03, mixed mode)
-```
-
-</details>
-
-2. 마찬가지로 동일한 클라이언트 환경에서 실습을 진행하는 관계로 서로 다른 이미지 이름을 갖도록 Function 이름 마지막에 구분할 수 있는 유니크한 값(e.g. abcde1)을 추가한 후 생성합니다. 
+1. 마찬가지로 동일한 클라이언트 환경에서 실습을 진행하는 관계로 서로 다른 이미지 이름을 갖도록 Function 이름 마지막에 구분할 수 있는 유니크한 값(e.g. abcde1)을 추가한 후 생성합니다. 
 > Native Function으로 생성할 경우 Fuction이름에 "-"와 같은 특수문자를 사용할 수 없습니다.
 ```shell
 $ fn init --init-image fnproject/fn-java-native-init graalfunc{unique-value}
@@ -445,7 +417,7 @@ $ fn init --init-image fnproject/fn-java-native-init graalfunc{unique-value}
 
 ```
 .
-├── graalfuncdhkim1
+├── graalfunc{unique-value}
 │   ├── Dockerfile
 │   ├── func.yaml
 │   ├── pom.xml
@@ -466,31 +438,25 @@ $ fn init --init-image fnproject/fn-java-native-init graalfunc{unique-value}
 
 Function 배포
 ```shell
-$ cd graalfuncabcde1
+$ cd graalfunc{unique-value}
 
 $ fn deploy --app helloworld-app
 ```
 
 Function 업데이트 (memory: 256M(default: 128M), timeout: 60s(default: 30s))
 ```shell
-$ fn update function helloworld-app graalfuncabcde1 --memory 256 --timeout 60
+$ fn update function helloworld-app graalfunc{unique-value} --memory 256 --timeout 60
 ```
 
 ### **STEP 11**: Native Java Functin 호출 테스트
 time을 사용하여 Function 호출 후 실행 완료하기까지 소요되는 시간을 체크합니다. GraalVM의 Native Image를 사용한 경우 Cold Start 타임이 대략 3초 소요된 것을 확인할 수 있습니다.
 
 ```shell
-$ time fn invoke helloworld-app graalfuncabcde1
+$ time fn invoke helloworld-app graalfunc{unique-value}
 
 Hello, world!
 
-real	0m3.024s
-user	0m0.081s
-sys 0m0.012s
+real	0m2.178s
+user	0m0.077s
+sys	0m0.018s
 ```
-
-
-## 참고
-https://medium.com/criciumadev/serverless-native-java-functions-using-graalvm-and-fn-project-c9b10a4a4859
-https://medium.com/thundra/mastering-java-cold-start-on-aws-lambda-volume-1-21c30ce378b7
-https://royvanrijn.com/blog/2018/09/part-2-native-microservice-in-graalvm/ : SubstrateVM
