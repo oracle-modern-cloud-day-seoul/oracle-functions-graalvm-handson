@@ -1,7 +1,5 @@
 # Oracle Functions with GraalVM on OCI Hands-On (Oracle Modern Cloud Day 2019의 Tech Hands-on Track)
 
-# 토큰 이슈가 있음
-
 Oracle Modern Cloud Day 2019의 Developer Hands-on Track
 
 ![](images/header_redwood_2.png)
@@ -460,3 +458,5 @@ real	0m2.178s
 user	0m0.077s
 sys	0m0.018s
 ```
+
+### **STEP 12**: 매트릭스 확인
