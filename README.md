@@ -457,3 +457,7 @@ sys	0m0.018s
 ```
 
 ### **STEP 11**: 매트릭스 확인
+OCI Console에서 Function 애플리케이션 또는 Function별로 매트릭스를 볼 수 있습니다.
+> helloworld-app Application 선택 > 좌측 Metrics 선택
+
+![](images/animated_gif/oci_functions_application_metrics.gif)
