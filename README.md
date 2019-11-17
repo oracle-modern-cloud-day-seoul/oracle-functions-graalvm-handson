@@ -1,4 +1,4 @@
-# Oracle Functions with GraalVM on OCI Hands-On (Oracle Modern Cloud Day 2019의 Tech Hands-on Track)
+# Oracle Functions with GraalVM on OCI Hands-On 
 
 Oracle Modern Cloud Day 2019의 Developer Hands-on Track
 
@@ -36,11 +36,8 @@ auth_token: P]xPvY0t2PqRB6s(dM3J
 compartment_ocid[MCD]: ocid1.compartment.oc1..aaaaaaaac4jbpfwkeqwwvyhkimynnf7kxyblfzgkt7jdj3qxsjbgvcy35jca
 ```
 
-## Oracle Functions Cloud Service 및 GraalVM Native Image 소개 (장표 설명, 10분 ~ 15분)
-Presentation은 Gitpitch를 사용할 예정임.
-[![](images/gitpitch-orm-intro.png)](https://gitpitch.com/mangdan/oracle-resource-manager-handson#/)
-
-Oracle Functions (with Fn Project)와 고성능, Polygrot VM인 GraalVM을 사용한 Native Java Image에 대한 간략한 소개 및 이점등에 대한 내용을 설명
+## 시나리오
+![](images/scenario.png)
 
 ## Hands-On (30분)
 총 11개의 단계로 구성됩니다.  
