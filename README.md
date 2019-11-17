@@ -44,14 +44,14 @@ compartment_ocid[MCD]: ocid1.compartment.oc1..aaaaaaaac4jbpfwkeqwwvyhkimynnf7kxy
 **STEP 1**: OCIR (Oracle Container Infrastructure Registry) Login 정보 확인  
 **STEP 2**: Docker Login  
 **STEP 3**: Fn Project CLI 설정  
-**STEP 4**: VCN 생성  
-**STEP 5**: Function Application 생성  
-**STEP 6**: Java Function 생성  
-**STEP 7**: Java Function 배포 및 업데이트  
-**STEP 8**: Functin 호출 테스트  
-**STEP 9**: GraalVM을 사용한 Native Java Function 생성  
-**STEP 10**: Native Java Function 배포 및 업데이트  
-**STEP 11**: Native Java Functin 호출 테스트  
+**STEP 4**: Function Application 생성  
+**STEP 5**: Java Function 생성  
+**STEP 6**: Java Function 배포 및 업데이트  
+**STEP 7**: Functin 호출 테스트  
+**STEP 8**: GraalVM을 사용한 Native Java Function 생성  
+**STEP 9**: Native Java Function 배포 및 업데이트  
+**STEP 10**: Native Java Functin 호출 테스트  
+**STEP 11**: Function Metrics  
 
 ## Hands-On
 ***
@@ -384,7 +384,7 @@ Function 업데이트 (memory: 256M(default: 128M), timeout: 60s(default: 30s))
 $ fn update function helloworld-app helloworld-func-{unique-value} --memory 256 --timeout 60
 ```
 
-### **STEP 8**: Function 호출 테스트
+### **STEP 7**: Function 호출 테스트
 time을 사용하여 Function 호출 후 실행 완료하기까지 소요되는 시간을 체크합니다. 일반 Java VM을 사용한 경우 Cold Start 타임이 대략 6초 소요된 것을 확인할 수 있습니다.
 
 ```shell
@@ -397,7 +397,7 @@ user	0m0.078s
 sys	0m0.021s
 ```
 
-### **STEP 9**: GraalVM을 사용한 Native Java Function 생성
+### **STEP 8**: GraalVM을 사용한 Native Java Function 생성
 이번에는 GraalVM을 사용하여 Java Function을 Native Image로 생성해보도록 하겠습니다.
 
 1. 마찬가지로 동일한 클라이언트 환경에서 실습을 진행하는 관계로 서로 다른 이미지 이름을 갖도록 Function 이름 마지막에 구분할 수 있는 유니크한 값(e.g. abcde1)을 추가한 후 생성합니다. 
@@ -424,7 +424,7 @@ $ fn init --init-image fnproject/fn-java-native-init graalfunc{unique-value}
 └──
 ```
 
-### **STEP 10**: Native Java Function 배포 및 업데이트
+### **STEP 9**: Native Java Function 배포 및 업데이트
 생성한 Function을 배포해보겠습니다. 다음과 같이 실행합니다. 
 > 배포 시 다음과 같은 오류가 발생할 경우는 Docker login이 되어 있지 않은 경우입니다. 이 경우 다시 docker login을 한 후 재시도합니다.  
 > 
@@ -443,7 +443,7 @@ Function 업데이트 (memory: 256M(default: 128M), timeout: 60s(default: 30s))
 $ fn update function helloworld-app graalfunc{unique-value} --memory 256 --timeout 60
 ```
 
-### **STEP 11**: Native Java Functin 호출 테스트
+### **STEP 10**: Native Java Functin 호출 테스트
 time을 사용하여 Function 호출 후 실행 완료하기까지 소요되는 시간을 체크합니다. GraalVM의 Native Image를 사용한 경우 Cold Start 타임이 대략 3초 소요된 것을 확인할 수 있습니다.
 
 ```shell
@@ -456,4 +456,4 @@ user	0m0.077s
 sys	0m0.018s
 ```
 
-### **STEP 12**: 매트릭스 확인
+### **STEP 11**: 매트릭스 확인
